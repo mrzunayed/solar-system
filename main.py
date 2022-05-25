@@ -7,15 +7,19 @@ WIDTH, HEIGHT = 800, 800
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Solar System Simulator")
 
-WHITE = (255, 255, 255)
-SPACE_BLACK = (22, 24, 25)
-LIGHT_GREY = (200, 200, 200)
-DEEP_GREY = (50, 50, 50)
-GOLD = (255, 215, 0)
-BLUE = (100, 149, 237)
-RED = (188, 39, 50)
-ORANGE = (149, 58, 5)
-BROWN = (160, 141, 130)
+# COLORS
+DEFAULT_COLOR = (255, 255, 255)
+TEXT_COLOR = (50, 50, 50)
+SPACE_COLOR = (22, 24, 25)
+SUN_COLOR = (255, 215, 0)
+MERCURY_COLOR = (200, 200, 200)
+EARTH_COLOR = (100, 149, 237)
+MARS_COLOR = (188, 39, 50)
+VENUS_COLOR = (149, 58, 5)
+JUPITER_COLOR = (160, 141, 130)
+SATURN_COLOR = (226, 186, 117)
+URANUS_COLOR = (203, 240, 243)
+NEPTUNE_COLOR = (44, 55, 137)
 
 FONT = pygame.font.SysFont("comicsans", 12)
 
@@ -23,7 +27,7 @@ FONT = pygame.font.SysFont("comicsans", 12)
 class Object:
     AU = 149.6e9
     G = 6.67428e-11
-    SCALE = 250 / AU  # 1 AU = 100 pixels
+    SCALE = 50 / AU  # 1 AU = 149.6e9 m
     TIMESTEP = 3600 * 24  # 1 day
 
     def __init__(self, x, y, radius, color, mass, name):
@@ -51,11 +55,11 @@ class Object:
                 y = y * self.SCALE + HEIGHT / 2
                 updated_points.append((x, y))
 
-            pygame.draw.lines(window, DEEP_GREY, False, updated_points, 2)
-
-        if not self.sun:
-            distance_text = FONT.render(f"{round(self.distance_from_sun / 1000)} km", 1, WHITE)
-            window.blit(distance_text, (x + 10, y + 10))
+        #     pygame.draw.lines(window, TEXT_COLOR, False, updated_points, 1)
+        
+        # if not self.sun:
+        #     distance_text = FONT.render(f"{round(self.distance_from_sun / 1000)} km", 1, DEFAULT_COLOR)
+        #     window.blit(distance_text, (x + 10, y + 10))
 
         pygame.draw.circle(window, self.color, (x, y), self.radius)
 
@@ -96,30 +100,41 @@ def main():
     run = True
     clock = pygame.time.Clock()
 
-    # Create planets
-    sun = Object(0, 0, 30, GOLD, 1.988e30, "Sun")
+    # CREATE OBJECTS
+    # name = Object(x, y, radius, color, mass, "name")
+
+    sun = Object(0, 0, 12, SUN_COLOR, 1.988e30, "Sun")
     sun.sun = True
 
-    earth = Object(-1 * Object.AU, 0, 16, BLUE, 5.9722e24, "Earth")
+    earth = Object(-1 * Object.AU, 0, 4, EARTH_COLOR, 5.9722e24, "Earth")
     earth.y_velocity = 29.783 * 1000
 
-    mars = Object(-1.524 * Object.AU, 0, 12, RED, 6.4185e23, "Mars")
+    mars = Object(-1.524 * Object.AU, 0, 3, MARS_COLOR, 6.4185e23, "Mars")
     mars.y_velocity = 24.077 * 1000
 
-    mercury = Object(-0.387 * Object.AU, 0, 8, LIGHT_GREY, 3.3011e23, "Mercury")
+    mercury = Object(-0.387 * Object.AU, 0, 2.375, MERCURY_COLOR, 3.3011e23, "Mercury")
     mercury.y_velocity = 47.362 * 1000
 
-    venus = Object(0.723 * Object.AU, 0, 14, ORANGE, 4.8685e24, "Venus")
+    venus = Object(0.723 * Object.AU, 0, 3.5, VENUS_COLOR, 4.8685e24, "Venus")
     venus.y_velocity = -35.02 * 1000
 
-    # jupiter = Object(1.898 * Object.AU, 0, 20, BROWN, 1.8986e27, "Jupiter")
-    # jupiter.y_velocity = -13.07 * 1000
+    jupiter = Object(1.898 * Object.AU, 0, 6.5, JUPITER_COLOR, 1.8986e27, "Jupiter")
+    jupiter.y_velocity = -13.07 * 1000
+    
+    saturn = Object(3.814 * Object.AU, 0, 6, SATURN_COLOR, 5.6834e26, "Saturn")
+    saturn.y_velocity = -9.64 * 1000
+    
+    uranus = Object(5.518 * Object.AU, 0, 4.25, URANUS_COLOR, 8.6810e25, "Uranus")
+    uranus.y_velocity = -6.81 * 1000
+    
+    neptune = Object(7.7 * Object.AU, 0, 4.24, NEPTUNE_COLOR, 1.0243e26, "Neptune")
+    neptune.y_velocity = -5.43 * 1000
 
-    objects = [sun, earth, mars, mercury, venus]
+    objects = [sun, earth, mars, mercury, venus, jupiter, saturn, uranus, neptune]
 
     while run:
         clock.tick(60)
-        WIN.fill(SPACE_BLACK)
+        WIN.fill(SPACE_COLOR)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
